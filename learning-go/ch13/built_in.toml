@@ -1,0 +1,3 @@
+[rule.redefines-builtin-id]
+[rule.package-comments]
+    severity = "disabled"
