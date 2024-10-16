@@ -1,12 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"image"
 	"image/color"
 	"image/gif"
 	"io"
 	"math"
 	"math/rand"
+	"net/http"
 	"os"
 )
 
@@ -21,7 +23,13 @@ const (
 )
 
 func main() {
-	lissajous(os.Stdout)
+	err := http.ListenAndServe(":8080", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		lissajous(w)
+	}))
+
+	if err != nil && err != http.ErrServerClosed {
+		fmt.Fprintf(os.Stderr, "server error: %v\n", err)
+	}
 }
 
 func lissajous(out io.Writer) {
