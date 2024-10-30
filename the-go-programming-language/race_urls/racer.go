@@ -5,10 +5,6 @@ import (
 	"time"
 )
 
-func RaceUrls(url1, url2 string) string {
-	return RaceUrlsFast(url1, url2)
-}
-
 func RaceUrlsFast(url1, url2 string) string {
 	select {
 	case <-pingUrl(url1):
@@ -37,8 +33,6 @@ func pingUrl(url string) <-chan struct{} {
 	ch := make(chan struct{})
 	go func() {
 		http.Get(url)
-		var zero struct{}
-		ch <- zero
 		close(ch)
 	}()
 	return ch

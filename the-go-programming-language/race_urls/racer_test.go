@@ -26,17 +26,48 @@ func BenchmarkRaceUrls(b *testing.B) {
 	})
 }
 
-func TestRaceUrls(t *testing.T) {
+func TestRaceUrlsSlow(t *testing.T) {
 	slowServer, fastServer := getSlowAndFastServer()
 	defer slowServer.Close()
 	defer fastServer.Close()
 
-	want := fastServer.URL
-	got := race_urls.RaceUrls(slowServer.URL, fastServer.URL)
+	t.Run("url1 faster", func(t *testing.T) {
+		want := fastServer.URL
+		got := race_urls.RaceUrlsSlow(fastServer.URL, slowServer.URL)
+		if want != got {
+			t.Errorf("want %v, got %v", want, got)
+		}
+	})
 
-	if want != got {
-		t.Errorf("want %v, got %v", want, got)
-	}
+	t.Run("url2 faster", func(t *testing.T) {
+		want := fastServer.URL
+		got := race_urls.RaceUrlsSlow(slowServer.URL, fastServer.URL)
+		if want != got {
+			t.Errorf("want %v, got %v", want, got)
+		}
+	})
+}
+
+func TestRaceUrlsFast(t *testing.T) {
+	slowServer, fastServer := getSlowAndFastServer()
+	defer slowServer.Close()
+	defer fastServer.Close()
+
+	t.Run("url1 faster", func(t *testing.T) {
+		want := fastServer.URL
+		got := race_urls.RaceUrlsFast(fastServer.URL, slowServer.URL)
+		if want != got {
+			t.Errorf("want %v, got %v", want, got)
+		}
+	})
+
+	t.Run("url2 faster", func(t *testing.T) {
+		want := fastServer.URL
+		got := race_urls.RaceUrlsFast(slowServer.URL, fastServer.URL)
+		if want != got {
+			t.Errorf("want %v, got %v", want, got)
+		}
+	})
 }
 
 func makeServer(responseDuration time.Duration) *httptest.Server {
