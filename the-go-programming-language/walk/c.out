@@ -1,0 +1,7 @@
+mode: set
+walk/walk.go:5.43,7.37 2 1
+walk/walk.go:7.37,9.3 1 1
+walk/walk.go:11.2,11.41 1 1
+walk/walk.go:11.41,13.38 2 1
+walk/walk.go:13.38,14.12 1 1
+walk/walk.go:16.3,16.55 1 1
