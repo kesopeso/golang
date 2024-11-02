@@ -1,7 +1,20 @@
 mode: set
-walk/walk.go:5.43,7.37 2 1
-walk/walk.go:7.37,9.3 1 1
-walk/walk.go:11.2,11.41 1 1
-walk/walk.go:11.41,13.38 2 1
-walk/walk.go:13.38,14.12 1 1
-walk/walk.go:16.3,16.55 1 1
+walk/walk.go:5.61,8.38 2 1
+walk/walk.go:8.38,11.3 2 1
+walk/walk.go:13.2,13.37 1 1
+walk/walk.go:13.37,15.3 1 1
+walk/walk.go:17.2,17.41 1 1
+walk/walk.go:17.41,20.38 3 1
+walk/walk.go:20.38,22.12 2 1
+walk/walk.go:24.3,24.25 1 1
+walk/walk.go:24.25,26.4 1 1
+walk/walk.go:27.3,27.29 1 1
+walk/walk.go:31.38,34.23 2 1
+walk/walk.go:35.22,36.42 1 1
+walk/walk.go:36.42,39.4 2 1
+walk/walk.go:40.20,41.57 1 1
+walk/walk.go:41.57,43.4 1 1
+walk/walk.go:44.22,45.22 1 1
+walk/walk.go:49.36,52.38 2 1
+walk/walk.go:52.38,54.3 1 1
+walk/walk.go:56.2,56.15 1 1
