@@ -1,0 +1,6 @@
+Title: Another post
+Description: Nothing special
+Tags: nothing, special
+---
+Making something new.
+Not sure why, but id does not fill special at all.
