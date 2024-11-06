@@ -6,11 +6,14 @@ import (
 )
 
 type TestSpiralHandler struct {
+	r      float64
 	points []spiral.Point
 }
 
-func (tsh *TestSpiralHandler) HandleSpiralData(points []spiral.Point) {
+func (tsh *TestSpiralHandler) HandleSpiralData(r float64, points []spiral.Point) error {
+	tsh.r = r
 	tsh.points = points
+	return nil
 }
 
 func newTestSpiralHandler() *TestSpiralHandler {
@@ -33,6 +36,13 @@ func TestWriteSpiral(t *testing.T) {
 
 	if !pointsRouglyEqual(got, want) {
 		t.Errorf("result mismatch, got %v, want %v", got, want)
+	}
+
+	rwant := float64(4)
+	rgot := tsh.r
+
+	if rwant != rgot {
+		t.Errorf("radius missmatch, got %v, want %v", got, want)
 	}
 }
 

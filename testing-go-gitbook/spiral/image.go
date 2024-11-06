@@ -1,68 +1,56 @@
 package spiral
 
 import (
+	"image"
 	"image/color"
+	"image/draw"
+	"image/jpeg"
 	"io"
+	"math"
 )
-
-var pallete = []color.Color{color.White, color.Black}
 
 const (
 	whiteIndex = 0
 	blackIndex = 1
 )
 
-type ImageSize struct {
-	SizeX, SizeY int
+var pallete = []color.Color{color.White, color.Black}
+
+type ImageSpiralHandler struct {
+	size    int
+	quality int
+	out     io.Writer
 }
 
-func SpiralImage(out io.Writer, is ImageSize, sd SpiralData) {
-	const (
-		cycles  = 5
-		res     = 0.001
-		size    = 100
-		nframes = 128
-		delay   = 1
-	)
+func (ish ImageSpiralHandler) HandleSpiralData(r float64, spiralPoints []Point) error {
+	img := image.NewRGBA(image.Rect(0, 0, ish.size, ish.size))
 
-	// freq := rand.Float64() * 3.0
-	// anim := gif.GIF{LoopCount: nframes}
-	// phase := 0.0
+	// fill background with while color
+	backgroundColor := pallete[whiteIndex]
+	draw.Draw(img, img.Bounds(), &image.Uniform{backgroundColor}, image.Point{}, draw.Src)
 
-	// for i := 0; i < nframes; i++ {
-	// 	rect := image.Rect(0, 0, 2*size+1, 2*size+1)
-	// 	img := image.NewPaletted(rect, pallete)
+	// fill image with spiral points
+	scale := float64(ish.size-1) / (2 * r)
+	offset := float64(ish.size-1) / 2
+	lineColor := pallete[blackIndex]
+	for _, p := range spiralPoints {
+		x := getImageCoordinate(p.X, scale, offset, false)
+		y := getImageCoordinate(p.Y, scale, offset, true)
+		img.Set(x, y, lineColor)
+	}
 
-	// 	for j := 0; j < 2*size+1; j++ {
-	// 		for k := 0; k < 2*size+1; k++ {
-	// 			img.SetColorIndex(j, k, blackIndex)
-	// 		}
-	// 	}
+	jpegOptions := &jpeg.Options{Quality: ish.quality}
+	err := jpeg.Encode(ish.out, img, jpegOptions)
+	return err
+}
 
-	// 	for t := float64(0); t < cycles*2*math.Pi; t += res {
-	// 		x := math.Sin(t)
-	// 		y := math.Sin(t*freq + phase)
+func getImageCoordinate(value, scale, offset float64, flipAxis bool) int {
+	if flipAxis {
+		value *= -1
+	}
+	return int(math.Floor(value*scale + offset))
+}
 
-	// 		var colorIndex uint8
-	// 		switch {
-	// 		case i%2 == 0:
-	// 			colorIndex = whiteIndex
-	// 		case i%3 == 0:
-	// 			colorIndex = greenIndex
-	// 		case i%5 == 0:
-	// 			colorIndex = redIndex
-	// 		case i%7 == 0:
-	// 			colorIndex = blueIndex
-	// 		default:
-	// 			colorIndex = whiteIndex
-	// 		}
-
-	// 		img.SetColorIndex(size+int(x*size+0.5), size+int(y*size+0.5), colorIndex)
-	// 	}
-	// 	phase += 0.1
-	// 	anim.Delay = append(anim.Delay, delay)
-	// 	anim.Image = append(anim.Image, img)
-	// }
-
-	// gif.EncodeAll(out, &anim)
+func NewImageSpiralHandler(size, quality int, out io.Writer) ImageSpiralHandler {
+	return ImageSpiralHandler{size, quality, out}
 }
