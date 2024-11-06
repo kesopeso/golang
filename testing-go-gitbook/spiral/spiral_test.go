@@ -19,7 +19,8 @@ func newTestSpiralHandler() *TestSpiralHandler {
 
 func TestWriteSpiral(t *testing.T) {
 	tsh := newTestSpiralHandler()
-	spiral.WriteSpiral(tsh, 4, 4, 1)
+	sd := spiral.NewSpiralData(4, 4, 1)
+	spiral.WriteSpiral(tsh, sd)
 
 	want := []spiral.Point{
 		{0, 4},

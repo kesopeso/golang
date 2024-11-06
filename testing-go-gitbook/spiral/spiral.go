@@ -4,16 +4,26 @@ type SpiralHandler interface {
 	HandleSpiralData([]Point)
 }
 
-func WriteSpiral(sh SpiralHandler, startingR float64, totalIterations, totalCircles int) {
+type SpiralData struct {
+	R               float64
+	TotalIterations int
+	TotalCircles    int
+}
+
+func WriteSpiral(sh SpiralHandler, sd SpiralData) {
 	var spiralPoints []Point
-	for i := 0; i <= totalIterations; i++ {
-		spiralPoints = append(spiralPoints, newSpiralPoint(startingR, i, totalIterations, totalCircles))
+	for i := 0; i <= sd.TotalIterations; i++ {
+		spiralPoints = append(spiralPoints, newSpiralPoint(i, sd))
 	}
 	sh.HandleSpiralData(spiralPoints)
 }
 
-func newSpiralPoint(startingR float64, currentIteration, totalIterations, totalCircles int) Point {
-	r := startingR * float64(totalIterations-currentIteration) / float64(totalIterations)
-	point := NewPoint(currentIteration, totalIterations, totalCircles)
+func NewSpiralData(r float64, totalIterations, totalCircles int) SpiralData {
+	return SpiralData{r, totalIterations, totalCircles}
+}
+
+func newSpiralPoint(currentIteration int, sd SpiralData) Point {
+	r := sd.R * float64(sd.TotalIterations-currentIteration) / float64(sd.TotalIterations)
+	point := NewPoint(currentIteration, sd.TotalIterations, sd.TotalCircles)
 	return Point{r * point.X, r * point.Y}
 }
