@@ -3,7 +3,7 @@ package spiral
 import (
 	"errors"
 	"fmt"
-	"io"
+	// "io"
 	"math"
 	"strconv"
 	"strings"
@@ -56,27 +56,6 @@ Outer:
 		n = len(p)
 	}
 	return
-}
-
-func (sm *SpiralMatrix) Print(w io.Writer) error {
-	startingR := float64(sm.matrixSize) / 2
-	_, err := WriteSpiral(sm, startingR, sm.totalIterations, sm.totalCircles)
-	if err != nil {
-		return err
-	}
-
-	for _, row := range sm.matrix {
-		for _, column := range row {
-			if column {
-				fmt.Fprint(w, "#")
-			} else {
-				fmt.Fprint(w, " ")
-			}
-		}
-		fmt.Fprint(w, "\n")
-	}
-
-	return nil
 }
 
 func NewSpiralMatrix(matrixSize, totalIterations, totalCircles int) *SpiralMatrix {

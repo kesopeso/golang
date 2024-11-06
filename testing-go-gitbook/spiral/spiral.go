@@ -1,34 +1,19 @@
 package spiral
 
-import (
-	"fmt"
-	"io"
-	"math"
-)
+type SpiralHandler interface {
+	HandleSpiralData([]Point)
+}
 
-func WriteSpiral(w io.Writer, startingR float64, totalIterations, totalCircles int) (n int, err error) {
-	var resultText string
+func WriteSpiral(sh SpiralHandler, startingR float64, totalIterations, totalCircles int) {
+	var spiralPoints []Point
 	for i := 0; i <= totalIterations; i++ {
-		spiralPoint := newSpiralPoint(startingR, i, totalIterations, totalCircles)
-		resultText += fmt.Sprintf("%.10f#%.10f", spiralPoint.X, spiralPoint.Y)
-		if i != totalIterations {
-			resultText += "\n"
-		}
+		spiralPoints = append(spiralPoints, newSpiralPoint(startingR, i, totalIterations, totalCircles))
 	}
-	n, err = fmt.Fprint(w, resultText)
-	return
+	sh.HandleSpiralData(spiralPoints)
 }
 
 func newSpiralPoint(startingR float64, currentIteration, totalIterations, totalCircles int) Point {
 	r := startingR * float64(totalIterations-currentIteration) / float64(totalIterations)
 	point := NewPoint(currentIteration, totalIterations, totalCircles)
-	return Point{roundRoughlyZero(r * point.X), roundRoughlyZero(r * point.Y)}
-}
-
-func roundRoughlyZero(num float64) float64 {
-	const zeroThreshold = 1e-10
-	if math.Abs(num) < zeroThreshold {
-		return 0
-	}
-	return num
+	return Point{r * point.X, r * point.Y}
 }
