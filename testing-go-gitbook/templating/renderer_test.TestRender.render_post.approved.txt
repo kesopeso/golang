@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>My amazing blog!</title>
+        <meta charset="UTF-8" />
+        <meta name="description" content="Wow, like and subscribe!" />
+    </head>
+    <body>
+        <nav role="navigation">
+            <div>
+                <h1>My blog</h1>
+                <ul>
+                    <li><a href="/">home</a></li>
+                    <li><a href="/">about</a></li>
+                    <li><a href="/">archive</a></li>
+                </ul>
+            </div>
+        </nav>
+    </body>
+    <main>
+<h1>Test post</h1>
+<p>Testing rendering</p>
+Tags: <ul><li>rendering</li><li>tests</li></ul>
+    </main>
+    
+    <footer>
+        <ul>
+            <li><a href="https://x.com">X - Twitter</a></li>
+            <li><a href="https://github.com">Github</a></li>
+        </ul>
+    </footer>
+</html>

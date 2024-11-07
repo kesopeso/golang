@@ -1,11 +1,23 @@
 package templating
 
 import (
-	"fmt"
+	"embed"
+	"html/template"
 	"io"
 )
 
+//go:embed "templates/*"
+var templates embed.FS
+
 func RenderPost(w io.Writer, p Post) error {
-	_, err := fmt.Fprintf(w, "<h1>%s</h1>", p.Title)
-	return err
+	templ, err := template.ParseFS(templates, "templates/*.gohtml")
+	if err != nil {
+		return err
+	}
+
+	if err := templ.ExecuteTemplate(w, "post.gohtml", p); err != nil {
+		return err
+	}
+
+	return nil
 }

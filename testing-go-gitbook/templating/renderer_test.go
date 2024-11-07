@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"templating"
 	"testing"
+
+	approvals "github.com/approvals/go-approval-tests"
 )
 
 func TestRender(t *testing.T) {
@@ -22,11 +24,6 @@ func TestRender(t *testing.T) {
 			t.Fatal("error should not occur", err)
 		}
 
-		got := buf.String()
-		want := "<h1>Test post</h1>"
-
-		if got != want {
-			t.Errorf("title missmatch, got %s, want %s", got, want)
-		}
+		approvals.VerifyString(t, buf.String())
 	})
 }
