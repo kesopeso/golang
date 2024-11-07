@@ -1,0 +1,4 @@
+{{template "top" .}}
+<h1>Posts</h1>
+<ol>{{range .}}<li><a href="/posts/{{.LinkSuffix}}">{{.Title}}</a></li>{{end}}</ol>
+{{template "bottom" .}}

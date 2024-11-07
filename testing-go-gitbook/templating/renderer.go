@@ -14,24 +14,40 @@ import (
 //go:embed "templates/*"
 var templates embed.FS
 
-type PostHTML struct {
+type postViewModel struct {
 	Post
-	Body template.HTML
+	BodyHTML template.HTML
+}
+
+type postsIndexViewModel struct {
+	Title      string
+	LinkSuffix string
 }
 
 type PostRenderer struct {
 	t *template.Template
+	p *parser.Parser
+	r *html.Renderer
 }
 
-func (r *PostRenderer) Render(w io.Writer, p Post) error {
-	return r.t.ExecuteTemplate(w, "post.gohtml", newPostHTML(p))
+func (r *PostRenderer) RenderPost(w io.Writer, p Post) error {
+	return r.t.ExecuteTemplate(w, "post.gohtml", r.newPostViewModel(p))
 }
 
-func newPostHTML(p Post) PostHTML {
-	return PostHTML{
-		Post: p,
-		Body: convertMarkdownToHTML(p.Body),
+func (r *PostRenderer) RenderIndex(w io.Writer, posts []Post) error {
+	return r.t.ExecuteTemplate(w, "index.gohtml", r.newPostsIndexViewModel(posts))
+}
+
+func (r *PostRenderer) newPostViewModel(p Post) postViewModel {
+	return postViewModel{Post: p, BodyHTML: convertMarkdownToHTML(r, p)}
+}
+
+func (r *PostRenderer) newPostsIndexViewModel(posts []Post) []postsIndexViewModel {
+	result := make([]postsIndexViewModel, len(posts))
+	for i, p := range posts {
+		result[i] = postsIndexViewModel{p.Title, createLinkFromTitle(p.Title)}
 	}
+	return result
 }
 
 func NewPostRenderer() (*PostRenderer, error) {
@@ -39,19 +55,23 @@ func NewPostRenderer() (*PostRenderer, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &PostRenderer{templ}, nil
-}
-
-func convertMarkdownToHTML(md string) template.HTML {
 	extensions := parser.CommonExtensions | parser.AutoHeadingIDs | parser.NoEmptyLineBeforeBlock
 	p := parser.NewWithExtensions(extensions)
-
 	htmlFlags := html.CommonFlags | html.HrefTargetBlank
 	opts := html.RendererOptions{Flags: htmlFlags}
 	renderer := html.NewRenderer(opts)
+	return &PostRenderer{templ, p, renderer}, nil
+}
 
-	bHTML := markdown.ToHTML([]byte(md), p, renderer)
+func convertMarkdownToHTML(r *PostRenderer, p Post) template.HTML {
+	bHTML := markdown.ToHTML([]byte(p.Body), r.p, r.r)
 	html := template.HTML(strings.TrimSuffix(string(bHTML), "\n"))
+	bodyHTML := template.HTML(html)
+	return bodyHTML
+}
 
-	return html
+func createLinkFromTitle(title string) string {
+	title = strings.ToLower(title)
+	title = strings.ReplaceAll(title, " ", "-")
+	return title
 }
