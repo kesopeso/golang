@@ -13,7 +13,13 @@ func TestRender(t *testing.T) {
 		Title:       "Test post",
 		Description: "Testing rendering",
 		Tags:        []string{"rendering", "tests"},
-		Body:        "This is some body to test the render with",
+		Body: `# Body title
+
+This is some body to test the render with
+
+## Subtitle
+
+Another body paragraph.`,
 	}
 
 	t.Run("render post", func(t *testing.T) {

@@ -19,8 +19,20 @@
     </body>
     <main>
 <h1>Test post</h1>
+
 <p>Testing rendering</p>
+
 Tags: <ul><li>rendering</li><li>tests</li></ul>
+
+<div>
+<h1 id="body-title">Body title</h1>
+
+<p>This is some body to test the render with</p>
+
+<h2 id="subtitle">Subtitle</h2>
+
+<p>Another body paragraph.</p>
+</div>
     </main>
     
     <footer>
