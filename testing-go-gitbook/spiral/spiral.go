@@ -1,7 +1,7 @@
 package spiral
 
 type SpiralHandler interface {
-	HandleSpiralData(r float64, spiralPoints []Point) error
+	HandleSpiralData(spiralPoints []Point) error
 }
 
 type SpiralData struct {
@@ -15,7 +15,7 @@ func WriteSpiral(sh SpiralHandler, sd SpiralData) error {
 	for i := 0; i <= sd.TotalIterations; i++ {
 		spiralPoints = append(spiralPoints, newSpiralPoint(i, sd))
 	}
-	err := sh.HandleSpiralData(sd.R, spiralPoints)
+	err := sh.HandleSpiralData(spiralPoints)
 	return err
 }
 

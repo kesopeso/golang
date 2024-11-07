@@ -9,39 +9,46 @@ import (
 	"math"
 )
 
-const (
-	whiteIndex = 0
-	blackIndex = 1
-)
-
-var pallete = []color.Color{color.White, color.Black}
-
 type ImageSpiralHandler struct {
 	size    int
 	quality int
 	out     io.Writer
 }
 
-func (ish ImageSpiralHandler) HandleSpiralData(r float64, spiralPoints []Point) error {
+func (ish ImageSpiralHandler) HandleSpiralData(spiralPoints []Point) error {
 	img := image.NewRGBA(image.Rect(0, 0, ish.size, ish.size))
 
 	// fill background with while color
-	backgroundColor := pallete[whiteIndex]
-	draw.Draw(img, img.Bounds(), &image.Uniform{backgroundColor}, image.Point{}, draw.Src)
+	draw.Draw(img, img.Bounds(), &image.Uniform{color.White}, image.Point{}, draw.Src)
 
 	// fill image with spiral points
+	r := getStartingR(spiralPoints)
 	scale := float64(ish.size-1) / (2 * r)
 	offset := float64(ish.size-1) / 2
-	lineColor := pallete[blackIndex]
 	for _, p := range spiralPoints {
 		x := getImageCoordinate(p.X, scale, offset, false)
 		y := getImageCoordinate(p.Y, scale, offset, true)
-		img.Set(x, y, lineColor)
+		img.Set(x, y, color.Black)
 	}
 
 	jpegOptions := &jpeg.Options{Quality: ish.quality}
 	err := jpeg.Encode(ish.out, img, jpegOptions)
 	return err
+}
+
+func getStartingR(spiralPoints []Point) float64 {
+	var r float64
+	for _, sp := range spiralPoints {
+		x := math.Abs(sp.X)
+		y := math.Abs(sp.Y)
+		if x > r {
+			r = x
+		}
+		if y > r {
+			r = y
+		}
+	}
+	return r
 }
 
 func getImageCoordinate(value, scale, offset float64, flipAxis bool) int {
