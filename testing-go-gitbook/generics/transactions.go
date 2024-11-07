@@ -16,13 +16,13 @@ func BalanceOf(transactions []Transaction, name string) int {
 	// 	}
 	// }
 	// return balance
-	return Reduce(transactions, func(b int, t Transaction) int {
-		if t.From == name {
-			return b - t.Amount
+	return Reduce(transactions, func(balance int, transaction Transaction) int {
+		if transaction.From == name {
+			return balance - transaction.Amount
 		}
-		if t.To == name {
-			return b + t.Amount
+		if transaction.To == name {
+			return balance + transaction.Amount
 		}
-		return b
+		return balance
 	}, 0)
 }
