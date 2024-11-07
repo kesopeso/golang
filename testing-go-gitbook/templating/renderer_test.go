@@ -19,7 +19,11 @@ func TestRender(t *testing.T) {
 	t.Run("render post", func(t *testing.T) {
 		buf := bytes.Buffer{}
 
-		err := templating.RenderPost(&buf, post)
+		postRenderer, err := templating.NewPostRenderer()
+		if err != nil {
+			t.Fatal("error should not occur", err)
+		}
+		err = postRenderer.Render(&buf, post)
 		if err != nil {
 			t.Fatal("error should not occur", err)
 		}
